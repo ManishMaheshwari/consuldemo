@@ -1,0 +1,32 @@
+version: '3'
+services:
+  hello-service-1:
+    image: consuldemo/hello-service
+    depends_on:
+    - server-2
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.11
+    container_name: hello-service-1
+    ports:
+    - "8080:8080"
+  hello-service-2:
+    image: consuldemo/hello-service
+    depends_on:
+    - server-2
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.12
+    container_name: hello-service-2
+    ports:
+    - "8081:8080"
+  hello-service-3:
+    image: consuldemo/hello-service
+    depends_on:
+    - server-2
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.13
+    container_name: hello-service-3
+    ports:
+    - "8082:8080"

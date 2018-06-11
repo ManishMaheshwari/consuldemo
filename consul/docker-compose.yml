@@ -1,0 +1,55 @@
+version: '3'
+services:
+  dev-consul:
+    image: consul
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.2
+    container_name: dev-consul
+    ports:
+    - "8500:8500"
+    environment:
+    - CONSUL_BIND_INTERFACE=eth0
+    - CONSUL_CLIENT_INTERFACE=eth0
+    command: "agent -server -bootstrap -datacenter=us_west -log-level=debug -ui" 
+  server-1:
+    image: consul
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.3
+    container_name: server-1
+    depends_on:
+    - dev-consul
+    environment:
+    - CONSUL_BIND_INTERFACE=eth0
+    command: "agent -server -join=172.18.0.2 -datacenter=us_west -log-level=debug -ui"
+  server-2:
+    image: consul
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.4
+    container_name: server-2
+    depends_on:
+    - dev-consul
+    environment:
+    - CONSUL_BIND_INTERFACE=eth0
+    command: "agent -server -join=172.18.0.2 -datacenter=us_west -log-level=debug -ui"
+  client-1:
+    image: consul
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.5
+    container_name: client-1
+    depends_on:
+    - dev-consul
+    environment:
+    - CONSUL_BIND_INTERFACE=eth0
+    command: "agent -join=172.18.0.2 -datacenter=us_west -log-level=debug"
+
+networks:
+    consul-net:
+        driver: bridge
+        ipam:
+            driver: default
+            config:
+              - subnet: 172.18.0.0/16

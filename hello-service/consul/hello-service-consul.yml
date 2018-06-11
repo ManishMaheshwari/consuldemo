@@ -1,0 +1,50 @@
+version: '3'
+services:
+  hello-service-consul-1:
+    image: consul
+    depends_on:
+    - hello-service-1
+    networks:
+      consul-net:
+        ipv4_address: 172.18.1.11
+    container_name: hello-service-consul-1
+    volumes:
+    - /Users/mmaheshwari/Projects/gitrepos/consuldemo/hello-service/consul/serv1:/consul/config
+    ports:
+    - "8600:8600/udp"
+    environment:
+        - CONSUL_BIND_INTERFACE=eth0
+        - CONSUL_CLIENT_INTERFACE=eth0
+    command: "agent -join=172.18.0.2 -datacenter=us_west -log-level=debug"
+  hello-service-consul-2:
+    image: consul
+    depends_on:
+    - hello-service-2
+    networks:
+      consul-net:
+        ipv4_address: 172.18.1.12
+    container_name: hello-service-consul-2
+    volumes:
+    - /Users/mmaheshwari/Projects/gitrepos/consuldemo/hello-service/consul/serv2:/consul/config
+    ports:
+    - "8601:8600/udp"
+    environment:
+        - CONSUL_BIND_INTERFACE=eth0
+        - CONSUL_CLIENT_INTERFACE=eth0
+    command: "agent -join=172.18.0.2 -datacenter=us_west -log-level=debug"
+  hello-service-consul-3:
+    image: consul
+    depends_on:
+    - hello-service-3
+    networks:
+      consul-net:
+        ipv4_address: 172.18.1.13
+    container_name: hello-service-consul-3
+    volumes:
+    - /Users/mmaheshwari/Projects/gitrepos/consuldemo/hello-service/consul/serv3:/consul/config
+    ports:
+    - "8602:8600/udp"
+    environment:
+        - CONSUL_BIND_INTERFACE=eth0
+        - CONSUL_CLIENT_INTERFACE=eth0
+    command: "agent -join=172.18.0.2 -datacenter=us_west -log-level=debug"

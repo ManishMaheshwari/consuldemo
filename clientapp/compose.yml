@@ -1,0 +1,12 @@
+version: '3'
+services:
+  clientapp:
+    image: consuldemo/clientapp
+    depends_on:
+    - hello-service-consul-1
+    networks:
+      consul-net:
+        ipv4_address: 172.18.0.101
+    container_name: clientapp
+    ports:
+    - "9090:8080"

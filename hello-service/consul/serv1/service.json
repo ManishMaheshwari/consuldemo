@@ -1,0 +1,22 @@
+{
+  "service": {
+    "name": "hello-service",
+    "tags": ["primary"],
+    "address": "172.18.0.11",
+    "meta": {
+      "meta": "for my spring boot service"
+    },
+    "port": 8080,
+    "enable_tag_override": false,
+    "checks": [
+      {
+        "id": "api",
+        "name": "HTTP API on port 8080",
+        "http": "http://172.18.0.11:8080/home",
+        "method": "GET",
+        "interval": "10s",
+        "timeout": "1s"
+      }
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+--SSH into a cluster, all at once.
+--configure the cluster in ~/.ssh/config with hostname as <BOX><n>
+
+set CLUSTER_NAME to "ConsulServers"
+
+tell application "iTerm"
+activate
+create window with default profile
+set pane_1 to (current session of current window)
+tell pane_1
+
+
+set fishtank to (split horizontally with profile "FishTank")
+set redsands to (split horizontally with profile "RedSands")
+set pastel to (split horizontally with profile "Pastel")
+set pastel to (split horizontally with profile "Hulk")
+
+tell fishtank
+  write text "cd ~/Projects/gitrepos/consuldemo"
+  write text "edoc_clean"
+  write text "curl http://127.0.0.1:8500/v1/agent/members?segment=_all | jq ."
+end tell
+
+tell pastel
+  write text "cd ~/Projects/gitrepos/consuldemo"
+  write text "./gradlew build docker"
+
+  delay 5
+  write text "cd ~/Projects/gitrepos/consuldemo/consul"
+  write text "docker-compose -f docker-compose.yml -f ../hello-service/compose.yml -f ../hello-service/consul/hello-service-consul.yml -f ../clientapp/compose.yml -f ../clientapp/consul/client-consul.yml up"
+  delay 1
+end tell
+
+tell redsands
+  write text "cd ~/Projects/gitrepos/consuldemo"
+  write text "dig @127.0.0.1 -p 8600 hello-service.service.consul"
+end tell
+
+--tell application "Google Chrome"
+--  make new window
+--  activate
+--  open location "http://localhost:8080/home"
+--
+--  set myTab to make new tab at end of tabs of window 1
+--  set URL of myTab to "http://localhost:8081/home"
+--
+--  set myTab to make new tab at end of tabs of window 1
+--  set URL of myTab to "http://localhost:8082/home"
+--
+--  set myTab to make new tab at end of tabs of window 1
+--  set URL of myTab to "http://localhost:8500/ui"
+--
+--  set myTab to make new tab at end of tabs of window 1
+--  set URL of myTab to "http://localhost:9090"
+--
+--  set myTab to make new tab at end of tabs of window 1
+--  set URL of myTab to "http://localhost:9090/home-remote"
+--
+--end tell
+--delay 1
+--tell application "Google Chrome" to activate
+--end tell
+
+create window with default profile
+set pane_1 to (current session of current window)
+tell pane_1
+  set redsands to (split horizontally with profile "RedSands")
+    write text "ab -c 100 -n 10000 http://localhost:9090/home-remote"
+  end tell
+end tell
+
